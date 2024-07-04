@@ -253,7 +253,6 @@ public class FramePrincipal extends javax.swing.JFrame {
     }
 
 
-
     private void ChistesPuntutadosActionPerformed(java.awt.event.ActionEvent evt) {
         this.setVisible(false);
         HistorialDeChistes historialDeChistes = new HistorialDeChistes();
@@ -266,50 +265,57 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private void PuntuarActionPerformed(java.awt.event.ActionEvent evt) {
 
-        try {
-            Chiste chiste = pedirChisteActualBD();
-            chiste.setPuntuacion(getPuntaje());
-            actualizarChisteEnBD(chiste);
-            JOptionPane.showMessageDialog(this, "¡Puntuación Actualizada!", "Notifiación", JOptionPane.INFORMATION_MESSAGE);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        if (!TextAreaDelChiste.getText().isBlank()) {
+            try {
+                Chiste chiste = pedirChisteActualBD();
+                chiste.setPuntuacion(getPuntaje());
+                actualizarChisteEnBD(chiste);
+                JOptionPane.showMessageDialog(this, "¡Puntuación Actualizada!", "Notifiación", JOptionPane.INFORMATION_MESSAGE);
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "No hay ningun chiste", "Notifiación", JOptionPane.INFORMATION_MESSAGE);
+
         }
 
     }
 
-    private Chiste pedirChisteActualBD() throws SQLException {
-
-        ConexionBD.conectarBD();
-        Chiste chiste = ConexionBD.pedirChisteActual();
-        ConexionBD.desconectarBD();
-
-        return chiste;
-    }
-    private void actualizarChisteEnBD(Chiste chiste) throws SQLException {
-        ConexionBD.conectarBD();
-        ConexionBD.actualizarChisteEnBD(chiste);
-        ConexionBD.desconectarBD();
-    }
 
 
+private Chiste pedirChisteActualBD() throws SQLException {
 
-    private String getPuntaje() {
-        return evaluarResultadoSlider(sliderDePuntuacion.getValue());
-    }
+    ConexionBD.conectarBD();
+    Chiste chiste = ConexionBD.pedirChisteActual();
+    ConexionBD.desconectarBD();
 
-    private String evaluarResultadoSlider(int valor) {
-        String rta = switch (valor) {
-            case 1 -> "Meh";
-            case 2 -> "Ja";
-            case 3 -> "jaja";
-            case 4 -> "JAJAJA";
-            case 5 -> "JAJAKJKF";
-            default -> "";
-        };
+    return chiste;
+}
 
-        return rta;
+private void actualizarChisteEnBD(Chiste chiste) throws SQLException {
+    ConexionBD.conectarBD();
+    ConexionBD.actualizarChisteEnBD(chiste);
+    ConexionBD.desconectarBD();
+}
 
-    }
+
+private String getPuntaje() {
+    return evaluarResultadoSlider(sliderDePuntuacion.getValue());
+}
+
+private String evaluarResultadoSlider(int valor) {
+    String rta = switch (valor) {
+        case 1 -> "Meh";
+        case 2 -> "Ja";
+        case 3 -> "jaja";
+        case 4 -> "JAJAJA";
+        case 5 -> "JAJAKJKF";
+        default -> "";
+    };
+
+    return rta;
+
+}
 
 
 
