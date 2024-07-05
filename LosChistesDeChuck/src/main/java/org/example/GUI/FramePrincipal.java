@@ -234,10 +234,7 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private Chiste actualizarTextAreaChiste() {
         Chiste chiste = ChukNorrisAPI.pedirChisteAlaAPI();
-
-        String chistee  = LibreTranslateAPI.traducir(chiste.getChiste());
-
-        TextAreaDelChiste.setText(chistee);
+        TextAreaDelChiste.setText(chiste.getChiste());
         ponerScrollArriba();
         return chiste;
     }

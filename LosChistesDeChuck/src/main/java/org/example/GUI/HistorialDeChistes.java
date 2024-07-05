@@ -148,7 +148,6 @@ public class HistorialDeChistes extends javax.swing.JFrame {
 
         try {
             if (opcionEsValida(opcion)) {
-                System.out.println(opcion + "paso");
                 cargarTextAreaChistes(opcion);
             }
         } catch (SQLException e) {
@@ -174,7 +173,6 @@ public class HistorialDeChistes extends javax.swing.JFrame {
         ArrayList<Chiste> chistes = obtenerArraylistDeChistes(opcion);
         for (Chiste c : chistes) {
             todosLoschistes = todosLoschistes.concat(formatearChiste(c));
-            System.out.println(todosLoschistes);
         }
         TextAreaChistes.setText(todosLoschistes);
         ponerScrollArriba();
