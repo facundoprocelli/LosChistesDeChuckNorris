@@ -1,6 +1,6 @@
 package org.example.GUI;
 
-import org.example.API.ConexionBD;
+import org.example.Connections.ConexionBD;
 import org.example.Module.Chiste;
 
 import javax.swing.*;

@@ -1,4 +1,4 @@
-package org.example.API;
+package org.example.Connections;
 
 import org.example.Module.Chiste;
 

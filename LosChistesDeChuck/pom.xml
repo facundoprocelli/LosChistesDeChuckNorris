@@ -15,21 +15,32 @@
     </properties>
 
     <dependencies>
+<!--        Dependencias para conectar con HTTP components (CHuck norris API)-->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
             <version>4.5.13</version>
         </dependency>
+<!--        Dependencia de JSON-->
         <dependency>
             <groupId>org.json</groupId>
             <artifactId>json</artifactId>
             <version>20210307</version>
         </dependency>
+<!--        Dependencia para conectar SQL-->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <version>8.0.28</version>
         </dependency>
+
+<!--        Dependencias para el uso de Libre translate-->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>4.9.3</version> <!-- o la versión más reciente -->
+        </dependency>
+
     </dependencies>
 
 </project>

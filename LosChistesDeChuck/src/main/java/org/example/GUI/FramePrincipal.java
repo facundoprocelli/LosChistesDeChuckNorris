@@ -1,7 +1,8 @@
 package org.example.GUI;
 
 import org.example.API.ChukNorrisAPI;
-import org.example.API.ConexionBD;
+import org.example.API.LibreTranslateAPI;
+import org.example.Connections.ConexionBD;
 import org.example.Module.Chiste;
 
 import javax.swing.*;
@@ -233,7 +234,10 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private Chiste actualizarTextAreaChiste() {
         Chiste chiste = ChukNorrisAPI.pedirChisteAlaAPI();
-        TextAreaDelChiste.setText(chiste.getChiste());
+
+        String chistee  = LibreTranslateAPI.traducir(chiste.getChiste());
+
+        TextAreaDelChiste.setText(chistee);
         ponerScrollArriba();
         return chiste;
     }
