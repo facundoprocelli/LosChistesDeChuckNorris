@@ -3,13 +3,13 @@ package org.example.Module;
 public class Chiste {
 
     private String id;
-    private String value;
+    private String chiste;
     private String puntuacion;
 
 
-    public Chiste(String id, String value, String puntuacion) {
+    public Chiste(String id, String chiste, String puntuacion) {
         this.id = id;
-        this.value = value;
+        this.chiste = chiste;
         this.puntuacion = puntuacion;
 
     }
@@ -23,12 +23,12 @@ public class Chiste {
         this.id = id;
     }
 
-    public String getValue() {
-        return value;
+    public String getChiste() {
+        return chiste;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setChiste(String chiste) {
+        this.chiste = chiste;
     }
 
     public String getPuntuacion() {

@@ -22,15 +22,13 @@ public class FramePrincipal extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSlider sliderDePuntuacion;
-    private javax.swing.JComboBox<String> SelectorDeCategorias;
     private javax.swing.JButton Puntuar;
-    private Chiste chiste;
 
-    // End of variables declaration
 
     public FramePrincipal() {
         initComponents();
         setLocationRelativeTo(null);
+        actualizarTextAreaChiste();
     }
 
     private void initComponents() {
@@ -47,7 +45,6 @@ public class FramePrincipal extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         sliderDePuntuacion = new javax.swing.JSlider();
         jLabel5 = new javax.swing.JLabel();
-        SelectorDeCategorias = new javax.swing.JComboBox<>();
         JLabel jLabel6 = new JLabel();
         Puntuar = new javax.swing.JButton();
 
@@ -70,10 +67,12 @@ public class FramePrincipal extends javax.swing.JFrame {
         TextAreaDelChiste.setColumns(20);
         TextAreaDelChiste.setRows(5);
         TextAreaDelChiste.setEditable(false);
-        TextAreaDelChiste.setFont(new java.awt.Font("Yu Gothic", 1, 14));
+        TextAreaDelChiste.setFont(new java.awt.Font("Yu Gothic", 0, 14));
         TextAreaDelChiste.setLineWrap(true);
         TextAreaDelChiste.setWrapStyleWord(true);
         jScrollPane1.setViewportView(TextAreaDelChiste);
+
+
 
         jLabel3.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(242, 242, 242));
@@ -101,32 +100,6 @@ public class FramePrincipal extends javax.swing.JFrame {
         jLabel5.setForeground(new java.awt.Color(242, 242, 242));
         jLabel5.setText("   Meh   |      Ja   |    jaja |  JAJAJA   | JAJAKJKF");
 
-        SelectorDeCategorias.setModel(new javax.swing.DefaultComboBoxModel<>(new String[]{"random",
-                "animal",
-                "career",
-                "celebrity",
-                "dev",
-                "explicit",
-                "fashion",
-                "food",
-                "history",
-                "money",
-                "movie",
-                "music",
-                "political",
-                "religion",
-                "science",
-                "sport",
-                "travel"}));
-        SelectorDeCategorias.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                SelectorDeCategoriasActionPerformed(evt);
-            }
-        });
-
-        jLabel6.setFont(new java.awt.Font("Yu Gothic", 1, 18)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(252, 252, 252));
-        jLabel6.setText("Categoría : ");
 
         Puntuar.setText("Puntuar");
         Puntuar.addActionListener(new java.awt.event.ActionListener() {
@@ -162,7 +135,6 @@ public class FramePrincipal extends javax.swing.JFrame {
                                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                         .addComponent(jLabel6)
                                                         .addGap(18, 18, 18)
-                                                        .addComponent(SelectorDeCategorias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addGap(53, 53, 53))
                                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -191,7 +163,6 @@ public class FramePrincipal extends javax.swing.JFrame {
                                         .addGroup(jPanel1Layout.createSequentialGroup()
                                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                                         .addComponent(jLabel3)
-                                                        .addComponent(SelectorDeCategorias, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                         .addComponent(jLabel6))
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -236,15 +207,38 @@ public class FramePrincipal extends javax.swing.JFrame {
 
 
     private void BotonOtroChisteActionPerformed(java.awt.event.ActionEvent evt) {
-        ChukNorrisAPI chukNorrisAPI = new ChukNorrisAPI();
-        Chiste chiste = chukNorrisAPI.pedirChisteAlaAPI();
-        TextAreaDelChiste.setText(chiste.getValue());
+
         try {
-            guardarChisteEnBD(chiste);
+            if (isChisteActualPuntuado()) {
+               Chiste chiste = actualizarTextAreaChiste();
+                guardarChisteEnBD(chiste);
+
+            } else {
+                lanzarNotificacion("¡El chiste no fue puntuado!");
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private boolean isChisteActualPuntuado() throws SQLException {
+        boolean rta = false;
+
+        if (!pedirChisteActualBD().getPuntuacion().isBlank()) {
+            rta = true;
+            ;
+        }
+        return rta;
+    }
+
+    private Chiste actualizarTextAreaChiste() {
+        Chiste chiste = ChukNorrisAPI.pedirChisteAlaAPI();
+        TextAreaDelChiste.setText(chiste.getChiste());
+        ponerScrollArriba();
+        return chiste;
+    }
+
+
 
     private void guardarChisteEnBD(Chiste chiste) throws SQLException {
         ConexionBD.conectarBD();
@@ -252,16 +246,22 @@ public class FramePrincipal extends javax.swing.JFrame {
         ConexionBD.desconectarBD();
     }
 
+    private void ponerScrollArriba(){
+        // Asegurarse de que el scroll esté en la parte superior
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                JScrollBar verticalScrollBar = jScrollPane1.getVerticalScrollBar();
+                verticalScrollBar.setValue(verticalScrollBar.getMinimum());
+            }
+        });
+    }
 
     private void ChistesPuntutadosActionPerformed(java.awt.event.ActionEvent evt) {
-        this.setVisible(false);
+        this.dispose();
         HistorialDeChistes historialDeChistes = new HistorialDeChistes();
         historialDeChistes.setVisible(true);
     }
 
-    private void SelectorDeCategoriasActionPerformed(java.awt.event.ActionEvent evt) {
-        // TODO add your handling code here:
-    }
 
     private void PuntuarActionPerformed(java.awt.event.ActionEvent evt) {
 
@@ -270,53 +270,55 @@ public class FramePrincipal extends javax.swing.JFrame {
                 Chiste chiste = pedirChisteActualBD();
                 chiste.setPuntuacion(getPuntaje());
                 actualizarChisteEnBD(chiste);
-                JOptionPane.showMessageDialog(this, "¡Puntuación Actualizada!", "Notifiación", JOptionPane.INFORMATION_MESSAGE);
+                lanzarNotificacion("¡Puntuación Actualizada!");
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
         } else {
-            JOptionPane.showMessageDialog(this, "No hay ningun chiste", "Notifiación", JOptionPane.INFORMATION_MESSAGE);
+            lanzarNotificacion("No hay ningun chiste");
 
         }
 
     }
 
 
+    private Chiste pedirChisteActualBD() throws SQLException {
 
-private Chiste pedirChisteActualBD() throws SQLException {
+        ConexionBD.conectarBD();
+        Chiste chiste = ConexionBD.pedirChisteActual();
+        ConexionBD.desconectarBD();
 
-    ConexionBD.conectarBD();
-    Chiste chiste = ConexionBD.pedirChisteActual();
-    ConexionBD.desconectarBD();
+        return chiste;
+    }
 
-    return chiste;
-}
-
-private void actualizarChisteEnBD(Chiste chiste) throws SQLException {
-    ConexionBD.conectarBD();
-    ConexionBD.actualizarChisteEnBD(chiste);
-    ConexionBD.desconectarBD();
-}
+    private void actualizarChisteEnBD(Chiste chiste) throws SQLException {
+        ConexionBD.conectarBD();
+        ConexionBD.actualizarChisteEnBD(chiste);
+        ConexionBD.desconectarBD();
+    }
 
 
-private String getPuntaje() {
-    return evaluarResultadoSlider(sliderDePuntuacion.getValue());
-}
+    private String getPuntaje() {
+        return evaluarResultadoSlider(sliderDePuntuacion.getValue());
+    }
 
-private String evaluarResultadoSlider(int valor) {
-    String rta = switch (valor) {
-        case 1 -> "Meh";
-        case 2 -> "Ja";
-        case 3 -> "jaja";
-        case 4 -> "JAJAJA";
-        case 5 -> "JAJAKJKF";
-        default -> "";
-    };
+    private String evaluarResultadoSlider(int valor) {
+        String rta = switch (valor) {
+            case 1 -> "Meh";
+            case 2 -> "Ja";
+            case 3 -> "jaja";
+            case 4 -> "JAJAJA";
+            case 5 -> "JAJAKJKF";
+            default -> "";
+        };
 
-    return rta;
+        return rta;
 
-}
+    }
 
+    private void lanzarNotificacion(String mensaje){
+        JOptionPane.showMessageDialog(this, mensaje, "Notifiación", JOptionPane.INFORMATION_MESSAGE);
+    }
 
 
 }

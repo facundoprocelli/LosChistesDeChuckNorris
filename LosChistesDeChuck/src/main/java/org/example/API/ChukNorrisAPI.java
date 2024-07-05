@@ -25,7 +25,7 @@ public class ChukNorrisAPI {
     }
 
 
-    public Chiste pedirChisteAlaAPI( ) {
+    public static Chiste pedirChisteAlaAPI( ) {
 
         // URL de la API de Chuck Norris
         String apiUrl = "https://api.chucknorris.io/jokes/random";
@@ -56,13 +56,13 @@ public class ChukNorrisAPI {
         return chiste;
     }
 
-    private Chiste parsearJSON(StringBuilder result) {
+    private static Chiste parsearJSON(StringBuilder result) {
         JSONObject jsonObject = new JSONObject(result.toString());
         Chiste chiste = new Chiste(jsonObject.getString("id"), jsonObject.getString("value")," " );
         return chiste;
     }
 
-    private Chiste ejecutarSolicitudDelChiste(HttpGet solicitud) throws IOException {
+    private static  Chiste ejecutarSolicitudDelChiste(HttpGet solicitud) throws IOException {
 
         Chiste chiste = null;
         response = httpClient.execute(solicitud);
@@ -76,7 +76,7 @@ public class ChukNorrisAPI {
     }
 
 
-    private StringBuilder leerRespuestaAPI(HttpEntity entity) throws IOException {
+    private static StringBuilder leerRespuestaAPI(HttpEntity entity) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(entity.getContent()));
         StringBuilder result = new StringBuilder();
         String line;
@@ -88,7 +88,7 @@ public class ChukNorrisAPI {
         return result;
     }
 
-    private HttpGet crearSolicitudGET(String APIurl) {
+    private static HttpGet crearSolicitudGET(String APIurl) {
         return new HttpGet(APIurl);
     }
 }

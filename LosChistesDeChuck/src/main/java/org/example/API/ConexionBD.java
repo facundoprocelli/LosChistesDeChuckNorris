@@ -40,19 +40,6 @@ public class ConexionBD {
 
     }
 
-    private static ArrayList<Chiste> procesarResultadosDeBD(ResultSet resultSet) throws SQLException {
-        ArrayList<Chiste> chistes = new ArrayList<>();
-
-        while (resultSet.next()) {
-            Chiste chiste = new Chiste(resultSet.getString(1),
-                    resultSet.getString(2),
-                    resultSet.getString(3));
-
-            chistes.add(chiste);
-        }
-        resultSet.close();
-        return chistes;
-    }
 
     public static ArrayList<Chiste> pedirChistesPorPuntuacion(String puntuacion) throws SQLException {
 
@@ -76,6 +63,19 @@ public class ConexionBD {
 
         return chiste;
     }
+    private static ArrayList<Chiste> procesarResultadosDeBD(ResultSet resultSet) throws SQLException {
+        ArrayList<Chiste> chistes = new ArrayList<>();
+
+        while (resultSet.next()) {
+            Chiste chiste = new Chiste(resultSet.getString(1),
+                    resultSet.getString(2),
+                    resultSet.getString(3));
+
+            chistes.add(chiste);
+        }
+        resultSet.close();
+        return chistes;
+    }
 
     public static void cargarChisteBD(Chiste chiste) throws SQLException {
 
@@ -89,7 +89,7 @@ public class ConexionBD {
         PreparedStatement statement = connection.prepareStatement("INSERT INTO chistes(id_chiste, value, puntuacion) VALUES(?,?,?)");
 
         statement.setString(1, chiste.getId());
-        statement.setString(2, chiste.getValue());
+        statement.setString(2, chiste.getChiste());
         statement.setString(3, chiste.getPuntuacion());
 
         return statement;
