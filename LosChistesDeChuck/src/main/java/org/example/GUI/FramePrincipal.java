@@ -234,7 +234,8 @@ public class FramePrincipal extends javax.swing.JFrame {
 
     private Chiste actualizarTextAreaChiste() {
         Chiste chiste = ChukNorrisAPI.pedirChisteAlaAPI();
-        TextAreaDelChiste.setText(chiste.getChiste());
+        TextAreaDelChiste.setText(LibreTranslateAPI.traducir(chiste.getChiste(), "es"));
+
         ponerScrollArriba();
         return chiste;
     }

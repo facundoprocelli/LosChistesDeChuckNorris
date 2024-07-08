@@ -1,121 +1,73 @@
 package org.example.API;
 
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
-import java.net.URI;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.net.http.HttpClient;
+import java.io.IOException;
 
+/*
+* Esta es una clase la cual se encarga de hacer una petición a un servidor local de libreTranslate
+* Trabaja con peticiones y clientes HTTP para poder conectarse e interecatuar con libreTranslate
+* */
 
 public class LibreTranslateAPI {
-/*
-    private static final OkHttpClient cliente = new OkHttpClient();
 
     public LibreTranslateAPI() {
     }
 
-    public static String traducir(String texto, String idiomaDestino)   {
+    public static String traducir(String texto, String idiomaDestino) {
+        String respuesta;
+        //Crea un cliente HTTP default
+        try (CloseableHttpClient cliente = HttpClients.createDefault()) {
 
-        HttpRequest peticion;
-        String respuesta = "";
-        try {
             JSONObject formularioATraducir = preparaFormulario(texto, idiomaDestino);
-             peticion = prepararPeticion(formularioATraducir);
-             HttpResponse<String> rta = cliente.send(peticion);
-            //respuesta = obetenerRespuestaTraducida(peticion);
+            HttpPost peticion = prepararPeticion(formularioATraducir);
+
+            //Ejecuto la peticion
+            try (CloseableHttpResponse rta = cliente.execute(peticion)) {
+                respuesta = obtenerRespuestaTraducida(rta);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return respuesta;
     }
 
-    private static JSONObject preparaFormulario(String texto, String idiomaDestino) {
+
+    //Prepara el formulario necesario para conectarse con libreTransalte
+    private static JSONObject preparaFormulario(String texto,  String idiomaDestino) {
+
         JSONObject cuerpoDeLaPeticion = new JSONObject();
-        cuerpoDeLaPeticion.put("q", texto);
-        cuerpoDeLaPeticion.put("source", "auto");
-        cuerpoDeLaPeticion.put("target", idiomaDestino);
-        cuerpoDeLaPeticion.put("format", "text");
-        cuerpoDeLaPeticion.put("alternatives", 3);
-        cuerpoDeLaPeticion.put("api_key", "");
+            cuerpoDeLaPeticion.put("q", texto);
+            cuerpoDeLaPeticion.put("source", "auto");
+            cuerpoDeLaPeticion.put("target", idiomaDestino);
+            cuerpoDeLaPeticion.put("format", "text");
 
         return cuerpoDeLaPeticion;
     }
 
-    private static HttpRequest prepararPeticion(JSONObject formularioATraducir) {
+    //Prepara la petición y para poder enviar el formualrio
+    private static HttpPost prepararPeticion(JSONObject formularioATraducir) {
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create("https://libretranslate.com/translate"))
-                .header("Content-Type", "application/json")
-                .POST(HttpRequest.BodyPublishers.ofString(formularioATraducir.toString()))
-                .build();
+        HttpPost peticion = new HttpPost("http://localhost:5000/translate");
+            peticion.setHeader("Content-Type", "application/json");
+            peticion.setEntity(new StringEntity(formularioATraducir.toString(), "UTF-8"));
 
-        return request;
+        return peticion;
     }
 
-    private static  String obetenerRespuestaTraducida(HttpRequest peticion) throws IOException {
+    //Traduce el JSON a un String
+    private static String obtenerRespuestaTraducida(CloseableHttpResponse respuesta) throws IOException {
+        //Obtiene el contendio de una respuesta HTTP en texto
+        String respuestaJSON = EntityUtils.toString(respuesta.getEntity());
+        JSONObject jo = new JSONObject(respuestaJSON);
 
-        String mensajeTraducido = "";
-        Response respuesta = cliente.newCall(peticion).execute();
-
-
-        //todo: borrar en caso de que ya funcione bien el traductor.
-
-        if (!respuesta.isSuccessful()) {
-            throw new IOException("Unexpected code " + respuesta);
-        }
-
-        if (respuesta.body() != null) {
-            mensajeTraducido = convertirRespuestaJSONaString(obtenerRespuestaJSON(respuesta));
-        }
-
-        respuesta.close();
-        return mensajeTraducido;
-    }
-
-    private static  String obtenerRespuestaJSON(Response respuesta) throws IOException {
-        return respuesta.body().string();
-    }
-
-    private static String convertirRespuestaJSONaString(String JSONTraducido) {
-        JSONObject jo = new JSONObject(JSONTraducido);
         return jo.getString("translatedText");
-    }
-*/
-
-
-    public static String traducir(String texto) {
-        try {
-            // Crear el cliente HTTP
-            HttpClient client = HttpClient.newHttpClient();
-
-            // Crear el cuerpo de la solicitud
-            JSONObject requestBody = new JSONObject();
-            requestBody.put("q", texto);
-            requestBody.put("source", "auto");
-            requestBody.put("target", "es");
-            requestBody.put("format", "text");
-            requestBody.put("alternatives", 3);
-            requestBody.put("api_key", "");
-
-            // Crear la solicitud HTTP
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("https://libretranslate.com/translate"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(requestBody.toString()))
-                    .build();
-
-            // Enviar la solicitud y obtener la respuesta
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            // Imprimir la respuesta JSON
-            JSONObject responseObject = new JSONObject(response.body());
-            System.out.println(responseObject.toString(4)); // Imprimir con sangría para legibilidad
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return texto;
     }
 }
 
