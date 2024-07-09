@@ -36,7 +36,6 @@ public class FramePrincipal extends JFrame {
         setLocationRelativeTo(null);
         actualizarTextAreaChiste();
         traducirPagina("es");
-        traducirChiste("es");
 
     }
 
@@ -81,8 +80,6 @@ public class FramePrincipal extends JFrame {
         TextAreaDelChiste.setLineWrap(true);
         TextAreaDelChiste.setWrapStyleWord(true);
         jScrollPane1.setViewportView(TextAreaDelChiste);
-
-
 
 
         lableElChiste.setFont(new Font("Yu Gothic", 1, 18)); // NOI18N
@@ -239,9 +236,7 @@ public class FramePrincipal extends JFrame {
 
         try {
             if (isChisteActualPuntuado()) {
-               Chiste chiste = actualizarTextAreaChiste();
-                guardarChisteEnBD(chiste);
-
+                Chiste chiste = actualizarTextAreaChiste();
             } else {
                 lanzarNotificacion("¡El chiste no fue puntuado!");
             }
@@ -261,13 +256,21 @@ public class FramePrincipal extends JFrame {
     }
 
     private Chiste actualizarTextAreaChiste() {
-        Chiste chiste = ChukNorrisAPI.pedirChisteAlaAPI();
-        TextAreaDelChiste.setText(chiste.getChiste());
 
-        ponerScrollArriba();
+        Chiste chiste = ChukNorrisAPI.pedirChisteAlaAPI();
+        try {
+
+            guardarChisteEnBD(chiste);
+
+            String idioma = obtenerIdiomaActual();
+            TextAreaDelChiste.setText(LibreTranslateAPI.traducir(chiste.getChiste(), idioma));
+            ponerScrollArriba();
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
         return chiste;
     }
-
 
 
     private void guardarChisteEnBD(Chiste chiste) throws SQLException {
@@ -276,7 +279,7 @@ public class FramePrincipal extends JFrame {
         ConexionBD.desconectarBD();
     }
 
-    private void ponerScrollArriba(){
+    private void ponerScrollArriba() {
         // Asegurarse de que el scroll esté en la parte superior
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
@@ -346,7 +349,7 @@ public class FramePrincipal extends JFrame {
 
     }
 
-    private void lanzarNotificacion(String mensaje){
+    private void lanzarNotificacion(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje, "Notifiación", JOptionPane.INFORMATION_MESSAGE);
     }
 
@@ -361,7 +364,7 @@ public class FramePrincipal extends JFrame {
         return convertirAOpcionValida(opcion);
     }
 
-    private void traducirPagina(String  idioma) {
+    private void traducirPagina(String idioma) {
 
         String[] palabrastraducidas = selectorDeIdioma(idioma);
         cambiarIdioma(palabrastraducidas);
@@ -370,7 +373,7 @@ public class FramePrincipal extends JFrame {
     private String[] selectorDeIdioma(String idioma) {
         String[] palabrastraducidas;
 
-        switch(idioma){
+        switch (idioma) {
             case "es" -> palabrastraducidas = getPalabrasEspanol();
             case "it" -> palabrastraducidas = getPalabrasItaliano();
             case "pt" -> palabrastraducidas = getPalabrasPortugues();
@@ -383,7 +386,7 @@ public class FramePrincipal extends JFrame {
         return new String[]{"Idioma", "Califícalo", "El chiste :", "Otro chiste", "Puntuar", "Hisotiral"};
     }
 
-    private String[] getPalabrasIngles()  {
+    private String[] getPalabrasIngles() {
         return new String[]{"Language", "Rate it", "The joke :", "Another joke", "Score", "History"};
     }
 
@@ -391,7 +394,7 @@ public class FramePrincipal extends JFrame {
         return new String[]{"Lingua", "Valutalo", "La barzelletta :", "Un'altra barzelletta", "Punteggio", "Storia"};
     }
 
-    private String[] getPalabrasPortugues(){
+    private String[] getPalabrasPortugues() {
         return new String[]{"Idioma", "Avalie", "A piada :", "Outra piada", "Pontuar", "Histórico"};
     }
 
@@ -406,7 +409,7 @@ public class FramePrincipal extends JFrame {
         BotonHisotiralDeChistes.setText(palabras[5]);
     }
 
-    private String convertirAOpcionValida(String idioma){
+    private String convertirAOpcionValida(String idioma) {
 
         return switch (idioma) {
             case "Español" -> "es";
