@@ -1,4 +1,5 @@
 # Los chistes De Chuck
+<img src="LosChistesDeChuck/src/main/resources/Images/ChuckNorrisChico.jpg" alt="" width="300" height="250">
 
 ## Descripción del Proyecto
 
