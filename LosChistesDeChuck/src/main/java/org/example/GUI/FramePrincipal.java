@@ -304,7 +304,7 @@ public class FramePrincipal extends JFrame {
     }
 
     private void ChistesPuntutadosActionPerformed(ActionEvent evt) {
-        this.dispose();
+        this.setVisible(false);
         HistorialDeChistes historialDeChistes = new HistorialDeChistes();
         historialDeChistes.setVisible(true);
     }

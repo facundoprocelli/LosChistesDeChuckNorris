@@ -224,7 +224,7 @@ public class HistorialDeChistes extends javax.swing.JFrame {
     }
 
     private void IrAtrasButtonActionPerformed(java.awt.event.ActionEvent evt) {
-        this.dispose();
+        this.setVisible(false);
         FramePrincipal frame = new FramePrincipal();
         frame.setVisible(true);
 
