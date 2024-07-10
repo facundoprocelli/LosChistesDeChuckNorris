@@ -24,7 +24,7 @@ El proyecto no solo sirve como un ejercicio técnico en la manipulación de APIs
   
 ## Instalación
 
-1. Hacer un fork del proyecto.
+1. Hacer un fork del proyecto o Ejecutar el archivo .exe
 2. Crear una tabla MySQL con los siguientes datos: `id_chiste`, `value`, `puntuacion`, `pos_entrada`.
 3. Correr una base de datos XAMPP.
 4. Instalar el contenedor LibreTranslate en Docker y correrlo.
