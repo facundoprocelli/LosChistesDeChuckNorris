@@ -3,6 +3,7 @@ package org.example.GUI;
 import org.example.API.ChukNorrisAPI;
 import org.example.API.LibreTranslateAPI;
 import org.example.Connections.ConexionBD;
+import org.example.Main;
 import org.example.Module.Chiste;
 
 import javax.swing.*;
@@ -60,6 +61,17 @@ public class FramePrincipal extends JFrame {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new Dimension(800, 500));
+        setResizable(false);
+
+
+        // Cargar el icono
+        URL logoURL = Main.class.getResource("/chuck-norris.png");
+        if(logoURL != null) {
+            ImageIcon icon = new ImageIcon(logoURL);
+            setIconImage(icon.getImage());
+        }else{
+            lanzarNotificacion("No se pudo cargar el loco");
+        }
 
         jPanel1.setBackground(new Color(11, 67, 104));
         jPanel1.setPreferredSize(new Dimension(800, 500));
@@ -226,6 +238,8 @@ public class FramePrincipal extends JFrame {
         sliderDePuntuacion.setValue(3);
         sliderDePuntuacion.setMajorTickSpacing(1);
         sliderDePuntuacion.setMinorTickSpacing(1);
+
+
         pack();
 
 
@@ -424,6 +438,6 @@ public class FramePrincipal extends JFrame {
         String chiste = TextAreaDelChiste.getText();
         String chisteTraducido = LibreTranslateAPI.traducir(chiste, idioma);
         TextAreaDelChiste.setText(chisteTraducido);
-
     }
+
 }

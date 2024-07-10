@@ -1,6 +1,7 @@
 package org.example.GUI;
 
 import org.example.Connections.ConexionBD;
+import org.example.Main;
 import org.example.Module.Chiste;
 
 import javax.swing.*;
@@ -25,6 +26,7 @@ public class HistorialDeChistes extends javax.swing.JFrame {
         try {
             initComponents();
             setLocationRelativeTo(null);
+            cambiarIconoAPP();
             cargarTextAreaChistes("Todos");
 
         } catch (SQLException e) {
@@ -44,6 +46,16 @@ public class HistorialDeChistes extends javax.swing.JFrame {
         jLabel3 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setResizable(false);
+
+
+        // Cargar el icono
+        URL logoURL = Main.class.getResource("/chuck-norris.png");
+        if(logoURL != null) {
+            ImageIcon icon = new ImageIcon(logoURL);
+            setIconImage(icon.getImage());
+        }
 
         jPanel1.setBackground(new java.awt.Color(11, 67, 104));
 
@@ -216,6 +228,14 @@ public class HistorialDeChistes extends javax.swing.JFrame {
         FramePrincipal frame = new FramePrincipal();
         frame.setVisible(true);
 
+    }
+
+    private void cambiarIconoAPP() {
+        URL imgURL = FramePrincipal.class.getResource("/Images/chuck-noris.png");
+        if (imgURL != null) {
+            ImageIcon imageIcon = new ImageIcon(imgURL);
+            setIconImage(imageIcon.getImage());
+        }
     }
 
 
