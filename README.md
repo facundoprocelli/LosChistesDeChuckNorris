@@ -1,6 +1,7 @@
+<p align="center">
 # Los chistes De Chuck
 <img src="LosChistesDeChuck/src/main/resources/Images/ChuckNorrisChico.jpg" alt="" width="300" height="250">
-
+</p>
 ## Descripción del Proyecto
 
 **Los chistes De Chuck** es una aplicación divertida y educativa diseñada para explorar el uso de APIs en aplicaciones Java. El proyecto utiliza la API "chuckNorris.io" para obtener chistes aleatorios de Chuck Norris y permite a los usuarios puntuarlos. Estas puntuaciones se almacenan en una base de datos MySQL para un seguimiento y análisis posterior.
